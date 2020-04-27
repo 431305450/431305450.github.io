@@ -45,17 +45,24 @@
 color="220,220,220" opacity='0.7' zIndex="-2" count="200" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
 </script>
 
-<!--动态线条背景-->
-
-    <script type="text/javascript" color="255, 235, 59" opacity="0.8" 
-        zIndex="-1" count="99" 
-        src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js">
-    </script>
 
 
 
 
 <body>
+
+# https://github.com/hustcc/canvas-nest.js
+# 配置详见： https://github.com/hustcc/canvas-nest.js#configuration
+# 动态线条效果，会向鼠标集中
+canvas_nest:
+  enable: true
+  color: '255, 235, 59'        # color of lines, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
+  pointColor: '156,39,176'     # color of points, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
+  opacity: '0.8'               # the opacity of line (0~1), default: 0.5.
+  count: '99'                  # the number of lines, default: 99.
+  zIndex: '-1'                 # z-index property of the background, default: -1.
+
+
   <div id="container" q-class="show:isCtnShow">
     <canvas id="anm-canvas" class="anm-canvas"></canvas>
     <div class="left-col" q-class="show:isShow">
