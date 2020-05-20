@@ -8,15 +8,15 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>spring框架 | 看见我请叫我滚去学习</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="暂无">
+  <meta name="description" content="一：IOC控制反转&#x2F;DI依赖注入：    1：创建一个类定义为接口类型名为 UserService在其中定义一个方法 public void sayHello()；2：再写一个实现类 UserServiceImlp使得方法在其中实现public void sayHello(){  System.out.println(“hello spring”+name);}  public String ge">
 <meta property="og:type" content="article">
 <meta property="og:title" content="spring框架">
 <meta property="og:url" content="http://yoursite.com/2020/04/25/spring%E6%A1%86%E6%9E%B6/index.html">
 <meta property="og:site_name" content="看见我请叫我滚去学习">
-<meta property="og:description" content="暂无">
+<meta property="og:description" content="一：IOC控制反转&#x2F;DI依赖注入：    1：创建一个类定义为接口类型名为 UserService在其中定义一个方法 public void sayHello()；2：再写一个实现类 UserServiceImlp使得方法在其中实现public void sayHello(){  System.out.println(“hello spring”+name);}  public String ge">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-25T07:46:35.000Z">
-<meta property="article:modified_time" content="2020-04-25T07:55:19.404Z">
+<meta property="article:modified_time" content="2020-05-20T15:45:01.588Z">
 <meta property="article:author" content="DingDang">
 <meta name="twitter:card" content="summary">
   
@@ -77,7 +77,7 @@
     总文章数 4
 </nav>
 <nav>
-	总字数 <span class="post-count">4.7k</span>
+	总字数 <span class="post-count">6.1k</span>
 </nav>
 		<nav class="header-smart-menu">
     		
@@ -187,14 +187,177 @@
         
 
 <div align="center" class="post-count">
-    字数：2字 | 预计阅读时长：1分钟
+    字数：1.4k字 | 预计阅读时长：6分钟
 </div>
 
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>暂无</p>
+        <p>一：IOC控制反转/DI依赖注入：<br>    1：创建一个类定义为接口类型名为 UserService<br>在其中定义一个方法 public void sayHello()；<br>2：再写一个实现类 UserServiceImlp<br>使得方法在其中实现<br>public void sayHello(){<br>  System.out.println(“hello spring”+name);<br>}<br>  public String getName() {<br>        return name;<br>    }</p>
+<pre><code>public void setName(String name) {
+    this.name = name;
+}</code></pre><p>3:写一个测试类 SpringDome1<br>观察传统实现和Spring实现方式</p>
+<a id="more"></a>
+
+
+<p>———————————————————————————————————————————————————<br>**需要先在resources文件下的applicationContext.xml配置文件下配置 bean  配置 id和class</p>
+<p>&lt;bean id=”userService”  //id可随便定义名字<br>class=”com.imooc.ioc.dome1.UserServiceImpl”&gt;<br> <!--设置属性--><br>        <property name="name"  value="李四"></property></p>
+</bean>
+———————————————————————————————————————————————————
+public class SpringDome1 {
+@Test
+/*
+传统开发实现方式
+ */
+   public  void dome1(){
+      //UserService userService=new UserServiceImpl();
+      UserServiceImpl userService=new UserServiceImpl();//接口类中没有属性 所以无法调用set.get方法 只能用实现类
+      userService.setName("张三");
+      userService.sayHello();
+   }
+@Test
+/*
+spring 的实现方式
+ */
+   public  void dome2(){
+      //创建Spring的工厂
+      ApplicationContext applicationContext= new ClassPathXmlApplicationContext("ApplicationContext.xml");
+      //通过工厂获得类
+      UserService userService=(UserService) applicationContext.getBean("userService");
+      userService.sayHello();
+   }
+———————————————————————————————————————————————————
+=========================================================================
+
+<p>二：SpringBean学习:</p>
+<pre><code>1：bean有三种实例化方式</code></pre><p>第一种无参构造方式<br>写一个Bean1类 再写入一个构造方法<br>public class Bean1 {<br>    public Bean1(){<br>        System.out.println(“Bean1被实例化”);<br>    }<br>}<br>在配置资源文件中写入<br><bean id="bean1" class="com.imooc.ioc.dome2.Bean1"></bean><br>再写一个测试类SpringDome2<br> @Test<br>    public void dome1(){<br>        //创建工厂<br>        ApplicationContext applicationContext=new ClassPathXmlApplicationContext(“ApplicationContext.xml”);<br>        Bean1 bean1=(Bean1) applicationContext.getBean(“bean1”);<br>    }<br>输出为 :Bean1被实例化<br>———————————————————————————————————————————————————<br>第二种实例化方式 静态工厂实例化方式<br>创建类Bean2,创建工厂类 BeanFactory<br>public class BeanFactory {<br>    public static Bean2 createBean2(){<br>        System.out.println(“Bean2方法执行了”);<br>        return  new Bean2();<br>    }<br>rescources下</p>
+<!--第二种静态工厂的配置-->
+<pre><code>&lt;bean id=&quot;bean2&quot; class=&quot;com.imooc.ioc.dome2.BeanFactory&quot; factory-method=&quot;createBean2&quot;&gt;&lt;/bean&gt;</code></pre><p>因为静态方法可以被类直接调用<br>在springDome2运行<br>@Test<br>    public void dome2(){<br>        //创建工厂<br>        ApplicationContext applicationContext=new ClassPathXmlApplicationContext(“ApplicationContext.xml”);<br>        Bean2 bean1=(Bean2) applicationContext.getBean(“bean2”);<br>    }<br>———————————————————————————————————————————————————<br>第三种实例工厂Bean3<br>public class Bean3Factory {</p>
+<pre><code>public Bean3 createBean3(){
+    System.out.println(&quot;Bean3工厂被执行&quot;);
+    return new Bean3();
+}</code></pre><p>配置</p>
+<!--第三种实例工厂的配置-->
+<pre><code>&lt;bean id=&quot;bean3Factory&quot; class=&quot;com.imooc.ioc.dome2.Bean3Factory&quot;&gt;&lt;/bean&gt;
+&lt;bean id=&quot;bean3&quot; factory-bean=&quot;bean3Factory&quot; factory-method=&quot;createBean3&quot;&gt;&lt;/bean&gt;</code></pre><p>运行<br> public void dome3(){<br>        //创建工厂<br>        ApplicationContext applicationContext=new ClassPathXmlApplicationContext(“ApplicationContext.xml”);<br>        Bean3 bean3=(Bean3) applicationContext.getBean(“bean3”);<br>    }<br>———————————————————————————————————————————————————<br>=========================================================================<br>三:AOP面向切开编程<br>    spring 学习day3 2020/5/19 (aop面向切口编程 jdk动态代理)<br>tip（都是在同一个包下）<br>创建一个UserDao接口类,然后写入4种方法<br>public interface UserDao {<br>    public  void save();<br>    public  void delete();<br>    public  void updata();<br>    public  void find();</p>
+<p>}<br>———————————————————————————————————————————————————<br>然后再写入接口实现类UserDaoImpl进行方法实现<br>public class UseDaoImpl implements UserDao{<br>    public void save(){</p>
+<pre><code>    System.out.println(&quot;保存用户&quot;);
+}
+
+public void delete(){
+
+    System.out.println(&quot;删除用户&quot;);
+}
+
+public void updata(){
+
+    System.out.println(&quot;更改用户&quot;);
+}
+
+public void find(){
+
+    System.out.println(&quot;查询用户&quot;);
+}</code></pre><p>}<br>———————————————————————————————————————————————————<br>然后再写入动态JDK代理类MyJdkProxy<br>public class MyJdkProxy implements InvocationHandler {<br>    private  UserDao userDao;<br>    //写一个构造方法将 UserDao传过来<br>    public  MyJdkProxy(UserDao userDao){<br>        this.userDao=userDao;</p>
+<pre><code>}
+public Object createProxy(){
+
+    Object proxy=Proxy.newProxyInstance(userDao.getClass().getClassLoader(),userDao.getClass().getInterfaces(),this);
+            return proxy;
+
+}
+
+@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+    if (&quot;save&quot;.equals(method.getName())){
+        System.out.println(&quot;权限校检&quot;);
+        return method.invoke(userDao,args);
+
+
+    }</code></pre><p>———————————————————————————————————————————————————<br>最后写一个测试类SpringDome1<br>public class SpringDome1 {<br>    @Test<br>    public void dome1(){<br>    UserDao useDao=new UseDaoImpl();<br>        UserDao proxy= (UserDao) new MyJdkProxy(useDao).createProxy();</p>
+<pre><code>proxy.save();
+proxy.delete();
+proxy.find();
+proxy.updata();
+}</code></pre><p>}<br>结果输出为:</p>
+<p>权限校检<br>保存用户<br>删除用户<br>查询用户<br>更改用户<br>———————————————————————————————————————————————————<br>=========================================================================<br>四:AOP面向切开编程<br>    Spring学习day2 2020/5/18(Springbean学习)<br>cglib的动态代理,没有接口类时<br>新建包 dome2<br>目标类为 productDao<br>public class ProductDao {<br>    public void save(){<br>        System.out.println(“保存方法”);<br>    }</p>
+<pre><code>public void delete(){
+    System.out.println(&quot;删除方法&quot;);
+}
+
+public void updata(){
+    System.out.println(&quot;更改方法&quot;);
+}
+
+public void find(){
+    System.out.println(&quot;查询方法&quot;);
+}</code></pre><p>}</p>
+<p>———————————————————————————————————————————————————<br>代理类<br>import org.springframework.cglib.proxy.Enhancer;<br>import org.springframework.cglib.proxy.MethodInterceptor;<br>import org.springframework.cglib.proxy.MethodProxy;</p>
+<p>import java.lang.reflect.Method;</p>
+<p>/*<br>代理类<br> */<br>public class MyCglibProxy implements MethodInterceptor {<br>   private ProductDao productDao;<br>    public  MyCglibProxy( ProductDao productDao){<br>        this.productDao=productDao;<br>    }<br>    public Object createProxy(){<br>        // 1 创建核心类<br>        Enhancer enhancer=new Enhancer();<br>        // 2设置父类<br>        enhancer.setSuperclass(productDao.getClass());<br>        //  3  设置回调,加入MethodInterceptor接口<br>        enhancer.setCallback(this);<br>        // 4 生成代理<br>        Object proxy=enhancer.create();<br>        return  proxy;</p>
+<pre><code>}
+
+@Override
+public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+
+    if(&quot;save&quot;.equals(method.getName())){
+        System.out.println(&quot;权限校验&quot;);
+    }
+    return methodProxy.invokeSuper(proxy,args);//调用父类中productDao的方法
+}</code></pre><p>}<br>———————————————————————————————————————————————————<br>测试类<br>public class SpringDome2 {<br>    @Test<br>    public void dome1(){<br>        ProductDao productDao=new ProductDao();<br>        ProductDao proxy=(ProductDao) new MyCglibProxy(productDao).createProxy();<br>        proxy.save();<br>        proxy.delete();<br>        proxy.updata();<br>        proxy.find();d<br>    }<br>}<br>———————————————————————————————————————————————————<br>=========================================================================<br>五:AOP一般切面<br>    *—–aop一般切面案例</p>
+<p>准备工作</p>
+<p>!–配置目标类–&gt;<br>    <bean id="studentDao" class="com.imooc.aop.dome3.StudentDaoImpl"></bean></p>
+<!--    前置通知类型-->
+<pre><code>&lt;bean id=&quot;myBeforeAdvice&quot; class=&quot;com.imooc.aop.dome3.MyBeforeAdvice&quot;&gt;&lt;/bean&gt;</code></pre><!--    spring aop产生的代理对象-->
+<!--    spring里提供一个类 ProxyFactorBean-->
+<pre><code>&lt;bean id=&quot;studentDaoProxy&quot; class=&quot;org.springframework.aop.framework.ProxyFactoryBean&quot;&gt;</code></pre><!-- 配置目标类       对象类属性无法用key,所以用ref，即ref对象为id-->
+<pre><code>&lt;property name=&quot;target&quot; ref=&quot;studentDao&quot;&gt;&lt;/property&gt;</code></pre><!--   类所实现的接口-->
+<pre><code>&lt;property name=&quot;proxyInterfaces&quot;  value=&quot;com.imooc.aop.dome3.StudengDao&quot;&gt;&lt;/property&gt;</code></pre><!--        采用哪种拦截的名称-->
+<pre><code>    &lt;property name=&quot;interceptorNames&quot; value=&quot;myBeforeAdvice&quot; &gt;&lt;/property&gt;
+
+&lt;/bean&gt;</code></pre></beans>
+
+<p>———————————————————————————————————————————————————<br>1<br>public interface StudengDao {<br>    public void save();<br>    public void delete();<br>    public void updata();<br>    public void find();<br>}<br>———————————————————————————————————————————————————<br>2<br>public class StudentDaoImpl implements  StudengDao{</p>
+<pre><code>@Override
+public void save() {
+    System.out.println(&quot;学生保存方法&quot;);
+}
+
+@Override
+public void delete() {
+    System.out.println(&quot;学生删除方法&quot;);
+
+}
+
+@Override
+public void updata() {
+    System.out.println(&quot;学生更改方法&quot;);
+
+}
+
+@Override
+public void find() {
+    System.out.println(&quot;学生查询方法&quot;);
+
+}</code></pre><p>}<br>3———————————————————————————————————————————————————<br>import org.springframework.aop.MethodBeforeAdvice;</p>
+<p>import java.lang.reflect.Method;</p>
+<p>public class MyBeforeAdvice implements MethodBeforeAdvice {</p>
+<pre><code>@Override
+public void before(Method method, Object[] objects, Object o) throws Throwable {
+    System.out.println(&quot;前置增强=====&quot;);
+}</code></pre><p>}<br>———————————————————————————————————————————————————<br>4<br>import org.junit.Test;<br>import org.junit.runner.RunWith;<br>import org.springframework.test.context.ContextConfiguration;<br>import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;</p>
+<p>import javax.annotation.Resource;</p>
+<p>@RunWith(SpringJUnit4ClassRunner.class)//单元测试<br>@ContextConfiguration(“classpath:applicationContext.xml”)<br>public class SpringDome3 {<br> // @Resource(name=”studentDao”)<br>    @Resource(name = “studentDaoProxy”)</p>
+<pre><code>private  StudengDao studengDao;
+@Test
+public void dome1(){
+    studengDao.find();
+    studengDao.delete();
+    studengDao.save();
+    studengDao.updata();
+
+}</code></pre><p>}<br>结果为:<br>前置增强=====<br>学生查询方法<br>前置增强=====<br>学生删除方法<br>前置增强=====<br>学生保存方法<br>前置增强=====<br>学生更改方法<br>———————————————————————————————————————————————————<br>=========================================================================</p>
 
       
 
@@ -298,18 +461,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/04/25/Spring+SpringMVC+MyBatis/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2020/04/26/TcpIp%E5%8D%8F%E8%AE%AE/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          Spring+SpringMVC+MyBatis
+          Tcp/Ip协议
         
       </div>
     </a>
   
   
-    <a href="/2020/04/25/%E5%A6%82%E4%BD%95%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%8D%9A%E5%AE%A2/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">如何搭建一个博客</div>
+    <a href="/2020/04/25/Spring+SpringMVC+MyBatis/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spring+SpringMVC+MyBatis</div>
       <i class="icon-circle-right"></i>
     </a>
   
